@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +34,8 @@ class BusinessController extends Controller
      */
     public function create()
     {
-        return view('businesses.create');
+        $userClientes = User::role('Cliente')->pluck('names', 'id');
+        return view('businesses.create', compact('userClientes'));
     }
 
     /**
@@ -49,9 +51,15 @@ class BusinessController extends Controller
             'description' => 'required',
             'user_id' => 'required',
         ]);
+        $data = $request->all();
+        $user = User::find($data['user_id'][0]);
+        if (!$user->hasRole('Cliente')) {
+            return redirect()->route('businesses.index')->with('error', 'User is not a client');
+        }
+        $data['user_id'] = $user->id;
         DB::beginTransaction();
         try {
-            Business::create($request->all());
+            Business::create($data);
             DB::commit();
             return redirect()->route('businesses.index')->with('success', 'Business created successfully');
         } catch (\Exception $e) {
@@ -80,7 +88,8 @@ class BusinessController extends Controller
     public function edit($id)
     {
         $business = Business::find($id);
-        return view('businesses.edit', compact('business'));
+        $userClientes = User::role('Cliente')->pluck('names', 'id');
+        return view('businesses.edit', compact('business', 'userClientes'));
     }
 
     /**
@@ -99,7 +108,13 @@ class BusinessController extends Controller
         ]);
         DB::beginTransaction();
         try {
-            Business::find($id)->update($request->all());
+            $data = $request->all();
+            $user = User::find($data['user_id'][0]);
+            if (!$user->hasRole('Cliente')) {
+                return redirect()->route('businesses.index')->with('error', 'User is not a client');
+            }
+            $data['user_id'] = $user->id;
+            Business::find($id)->update($data);
             DB::commit();
             return redirect()->route('businesses.index')->with('success', 'Business updated successfully');
         } catch (\Exception $e) {

@@ -64,6 +64,7 @@
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
+                                    <a class="btn btn-danger" href="{{ route('users.index') }}">Cancelar</a>
                                 </div>
                             </div>
                             {!! Form::close() !!}

@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('title')
-    Alta de Usuarios
+    Alta Menú
 @endsection
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Alta de Usuarios</h3>
+            <h3 class="page__heading">Alta Menú</h3>
         </div>
         <div class="section-body">
             <div class="row">
@@ -24,47 +24,41 @@
                                 </div>
                             @endif
 
-                            {!! Form::open(['route' => 'users.store']) !!}
+                            {!! Form::open(['route' => 'menu-items.store']) !!}
                             <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="col-md-12 col-xl-12">
                                     <div class="form-group">
-                                        {!! Form::label('names', 'Nombres') !!}
-                                        {!! Form::text('names', null, ['class' => 'form-control']) !!}
+                                        {!! Form::label('name', 'Nombre') !!}
+                                        {!! Form::text('name', null, ['class' => 'form-control']) !!}
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="col-md-12 col-xl-12">
                                     <div class="form-group">
-                                        {!! Form::label('surnames', 'Apellidos') !!}
-                                        {!! Form::text('surnames', null, ['class' => 'form-control']) !!}
+                                        {!! Form::label('description', 'Descripción') !!}
+                                        {!! Form::text('description', null, ['class' => 'form-control']) !!}
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="col-md-12 col-xl-12">
                                     <div class="form-group">
-                                        {!! Form::label('email', 'Correo') !!}
-                                        {!! Form::email('email', null, ['class' => 'form-control']) !!}
+                                        {!! Form::label('price', 'Precio') !!}
+                                        {!! Form::text('price', null, ['class' => 'form-control']) !!}
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="col-md-12 col-xl-12">
                                     <div class="form-group">
-                                        {!! Form::label('password', 'Contraseña') !!}
-                                        {!! Form::password('password', ['class' => 'form-control']) !!}
+                                        {!! Form::label('category_item_id', 'Categoría') !!}
+                                        {!! Form::select('category_item_id', $categoryItems, null, ['class' => 'form-control']) !!}
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="col-md-12 col-xl-12">
                                     <div class="form-group">
-                                        {!! Form::label('password_confirmation', 'Confirmar Contraseña') !!}
-                                        {!! Form::password('password_confirmation', ['class' => 'form-control']) !!}
+                                        {!! Form::label('business_id', 'Negocio') !!}
+                                        {!! Form::select('business_id', $businesses, null, ['class' => 'form-control']) !!}
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        {!! Form::label('roles', 'Roles') !!}
-                                        {!! Form::select('roles[]', $roles, null, ['class' => 'form-control']) !!}
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="col-md-12 col-xl-12">
                                     {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
-                                    <a class="btn btn-danger" href="{{ route('users.index') }}">Cancelar</a>
+                                    <a href="{{ route('menu-items.index') }}" class="btn btn-danger">Cancelar</a>
                                 </div>
                             </div>
                             {!! Form::close() !!}
@@ -72,5 +66,6 @@
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
 use App\Models\CategoryItem;
 use App\Models\MenuItem;
 use Illuminate\Support\Facades\DB;
@@ -35,8 +36,9 @@ class MenuItemController extends Controller
      */
     public function create()
     {
-        $categories = CategoryItem::pluck('name', 'id')->all();
-        return view('menuItems.create', compact('categories'));
+        $categoryItems = CategoryItem::pluck('name', 'id')->all();
+        $businesses = Business::pluck('name', 'id')->all();
+        return view('menuItems.create', compact('categoryItems', 'businesses'));
     }
 
     /**
@@ -49,7 +51,8 @@ class MenuItemController extends Controller
     {
         $this->validate($request, [
             'category_item_id' => 'required',
-            'name' => 'required',
+            'business_id' => 'required',
+            'name' => 'required|unique:menu_items',
             'description' => 'required',
             'price' => 'required',
         ]);
@@ -57,10 +60,10 @@ class MenuItemController extends Controller
         try {
             MenuItem::create($request->all());
             DB::commit();
-            return redirect()->route('menuItems.index')->with('success', 'Menu Item created successfully');
+            return redirect()->route('menu-items.index')->with('success', 'Menu Item created successfully');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('menuItems.index')->with('error', 'Menu Item created failed');
+            return redirect()->route('menu-items.index')->with('error', 'Menu Item created failed');
         }
     }
 
@@ -84,8 +87,9 @@ class MenuItemController extends Controller
     public function edit($id)
     {
         $menuItem = MenuItem::find($id);
-        $categories = CategoryItem::pluck('name', 'id')->all();
-        return view('menuItems.edit', compact('menuItem', 'categories'));
+        $categoryItems = CategoryItem::pluck('name', 'id')->all();
+        $businesses = Business::pluck('name', 'id')->all();
+        return view('menuItems.edit', compact('menuItem', 'categoryItems', 'businesses'));
     }
 
     /**
@@ -100,7 +104,8 @@ class MenuItemController extends Controller
         $menuItem = MenuItem::find($id);
         $this->validate($request, [
             'category_item_id' => 'required',
-            'name' => 'required',
+            'business_id' => 'required',
+            'name' => 'required|unique:menu_items,name,' . $menuItem->id . ',id',
             'description' => 'required',
             'price' => 'required',
         ]);
@@ -108,10 +113,10 @@ class MenuItemController extends Controller
         try {
             $menuItem->update($request->all());
             DB::commit();
-            return redirect()->route('menuItems.index')->with('success', 'Menu Item updated successfully');
+            return redirect()->route('menu-items.index')->with('success', 'Menu Item updated successfully');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('menuItems.index')->with('error', 'Menu Item updated failed');
+            return redirect()->route('menu-items.index')->with('error', 'Menu Item updated failed');
         }
     }
 
@@ -127,10 +132,10 @@ class MenuItemController extends Controller
         try {
             MenuItem::find($id)->delete();
             DB::commit();
-            return redirect()->route('menuItems.index')->with('success', 'Menu Item deleted successfully');
+            return redirect()->route('menu-items.index')->with('success', 'Menu Item deleted successfully');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('menuItems.index')->with('error', 'Menu Item deleted failed');
+            return redirect()->route('menu-items.index')->with('error', 'Menu Item deleted failed');
         }
     }
 }

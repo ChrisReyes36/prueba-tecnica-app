@@ -45,18 +45,16 @@ class CategoryItemController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'category_id' => 'required',
             'name' => 'required',
-            'description' => 'required',
         ]);
         DB::beginTransaction();
         try {
             CategoryItem::create($request->all());
             DB::commit();
-            return redirect()->route('categoryItems.index')->with('success', 'Category Item created successfully');
+            return redirect()->route('category-items.index')->with('success', 'Category Item created successfully');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('categoryItems.index')->with('error', 'Category Item created failed');
+            return redirect()->route('category-items.index')->with('error', 'Category Item created failed');
         }
     }
 
@@ -94,18 +92,16 @@ class CategoryItemController extends Controller
     {
         $categoryItem = CategoryItem::find($id);
         $this->validate($request, [
-            'category_id' => 'required',
-            'name' => 'required',
-            'description' => 'required',
+            'name' => 'required|unique:category_items,name,' . $categoryItem->id,
         ]);
         DB::beginTransaction();
         try {
             $categoryItem->update($request->all());
             DB::commit();
-            return redirect()->route('categoryItems.index')->with('success', 'Category Item updated successfully');
+            return redirect()->route('category-items.index')->with('success', 'Category Item updated successfully');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('categoryItems.index')->with('error', 'Category Item updated failed');
+            return redirect()->route('category-items.index')->with('error', 'Category Item updated failed');
         }
     }
 
@@ -121,10 +117,10 @@ class CategoryItemController extends Controller
         try {
             CategoryItem::find($id)->delete();
             DB::commit();
-            return redirect()->route('categoryItems.index')->with('success', 'Category Item deleted successfully');
+            return redirect()->route('category-items.index')->with('success', 'Category Item deleted successfully');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('categoryItems.index')->with('error', 'Category Item deleted failed');
+            return redirect()->route('category-items.index')->with('error', 'Category Item deleted failed');
         }
     }
 }

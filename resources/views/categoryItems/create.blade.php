@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('title')
-    Alta de Negocio
+    Alta de Categoría de Item
 @endsection
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Alta de Negocio</h3>
+            <h3 class="page__heading">Alta de Categoría de Item</h3>
         </div>
         <div class="section-body">
             <div class="row">
@@ -24,7 +24,7 @@
                                 </div>
                             @endif
 
-                            {!! Form::open(['route' => 'businesses.store']) !!}
+                            {!! Form::open(['route' => 'category-items.store']) !!}
                             <div class="row">
                                 <div class="col-md-12 col-xl-12">
                                     <div class="form-group">
@@ -32,24 +32,13 @@
                                         {!! Form::text('name', null, ['class' => 'form-control']) !!}
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-xl-12">
-                                    <div class="form-group">
-                                        {!! Form::label('description', 'Descripción') !!}
-                                        {!! Form::text('description', null, ['class' => 'form-control']) !!}
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xl-12">
-                                    <div class="form-group">
-                                        {!! Form::label('user_id', 'Clientes') !!}
-                                        {!! Form::select('user_id[]', $userClientes, null, ['class' => 'form-control']) !!}
-                                    </div>
-                                </div>
+
                                 <div class="col-md-12 col-xl-12">
                                     <button type="submit" class="btn btn-primary">Guardar</button>
-                                    <a class="btn btn-danger" href="{{ route('businesses.index') }}">Cancelar</a>
+                                    <a class="btn btn-danger" href="{{ route('category-items.index') }}">Cancelar</a>
                                 </div>
-                                {!! Form::close() !!}
                             </div>
+                            {!! Form::close() !!}
                         </div>
                     </div>
                 </div>
