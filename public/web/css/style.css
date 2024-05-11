@@ -4143,10 +4143,16 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     background: linear-gradient(45deg,#73b4ff, #4099ff);
 }
 .bg-c-green {
-    background: linear-gradient(45deg,#59e0c5, #2ed8b6);
+    background: linear-gradient(45deg,#96c9bf, #5a8b82);
 }
 .bg-c-pink {
     background: linear-gradient(45deg,#ff869a, #FF5370);
+}
+.bg-c-yellow {
+    background: linear-gradient(45deg,#FFD868, #FFB64D);
+}
+.bg-c-purple{
+    background: linear-gradient(45deg,#a683ff, #7e5fff);
 }
 .card {
     -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);

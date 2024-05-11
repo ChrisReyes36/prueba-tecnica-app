@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Business;
 use App\Models\CategoryItem;
 use App\Models\MenuItem;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
@@ -37,7 +38,12 @@ class MenuItemController extends Controller
     public function create()
     {
         $categoryItems = CategoryItem::pluck('name', 'id')->all();
-        $businesses = Business::pluck('name', 'id')->all();
+        $user = User::find(auth()->user()->id);
+        if ($user->hasRole('Administrador') || $user->hasRole('Súper Administrador')) {
+            $businesses = Business::pluck('name', 'id')->all();
+        } else if ($user->hasRole('Cliente')) {
+            $businesses = Business::where('user_id', auth()->user()->id)->pluck('name', 'id')->all();
+        }
         return view('menuItems.create', compact('categoryItems', 'businesses'));
     }
 
@@ -88,7 +94,12 @@ class MenuItemController extends Controller
     {
         $menuItem = MenuItem::find($id);
         $categoryItems = CategoryItem::pluck('name', 'id')->all();
-        $businesses = Business::pluck('name', 'id')->all();
+        $user = User::find(auth()->user()->id);
+        if ($user->hasRole('Administrador') || $user->hasRole('Súper Administrador')) {
+            $businesses = Business::pluck('name', 'id')->all();
+        } else if ($user->hasRole('Cliente')) {
+            $businesses = Business::where('user_id', auth()->user()->id)->pluck('name', 'id')->all();
+        }
         return view('menuItems.edit', compact('menuItem', 'categoryItems', 'businesses'));
     }
 
