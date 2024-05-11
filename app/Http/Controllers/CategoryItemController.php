@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryItemController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:category-item-list|category-item-create|category-item-edit|category-item-delete', ['only' => ['index']]);
+        $this->middleware('permission:category-item-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:category-item-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:category-item-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +22,8 @@ class CategoryItemController extends Controller
      */
     public function index()
     {
-        //
+        $categoryItems = CategoryItem::paginate(5);
+        return view('categoryItems.index', compact('categoryItems'));
     }
 
     /**
@@ -23,7 +33,7 @@ class CategoryItemController extends Controller
      */
     public function create()
     {
-        //
+        return view('categoryItems.create');
     }
 
     /**
@@ -34,7 +44,20 @@ class CategoryItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'category_id' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+        DB::beginTransaction();
+        try {
+            CategoryItem::create($request->all());
+            DB::commit();
+            return redirect()->route('categoryItems.index')->with('success', 'Category Item created successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('categoryItems.index')->with('error', 'Category Item created failed');
+        }
     }
 
     /**
@@ -56,7 +79,8 @@ class CategoryItemController extends Controller
      */
     public function edit($id)
     {
-        //
+        $categoryItem = CategoryItem::find($id);
+        return view('categoryItems.edit', compact('categoryItem'));
     }
 
     /**
@@ -68,7 +92,21 @@ class CategoryItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $categoryItem = CategoryItem::find($id);
+        $this->validate($request, [
+            'category_id' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+        DB::beginTransaction();
+        try {
+            $categoryItem->update($request->all());
+            DB::commit();
+            return redirect()->route('categoryItems.index')->with('success', 'Category Item updated successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('categoryItems.index')->with('error', 'Category Item updated failed');
+        }
     }
 
     /**
@@ -79,6 +117,14 @@ class CategoryItemController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            CategoryItem::find($id)->delete();
+            DB::commit();
+            return redirect()->route('categoryItems.index')->with('success', 'Category Item deleted successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('categoryItems.index')->with('error', 'Category Item deleted failed');
+        }
     }
 }

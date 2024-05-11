@@ -103,7 +103,7 @@ class UserController extends Controller
             'names' => 'required',
             'surnames' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'required|confirmed',
+            'password' => 'confirmed',
             'roles' => 'required'
         ]);
         DB::beginTransaction();

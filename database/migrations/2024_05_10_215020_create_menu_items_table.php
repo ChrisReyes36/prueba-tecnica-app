@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->decimal('price', 8, 2);
-            $table->integer('category_item_id')->unsigned();
+            $table->unsignedBigInteger('category_item_id');
             $table->foreign('category_item_id')->references('id')->on('category_items')->onDelete('cascade')->onUpdate('cascade');
-            $table->integer('business_id')->unsigned();
+            $table->unsignedBigInteger('business_id');
             $table->foreign('business_id')->references('id')->on('businesses')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

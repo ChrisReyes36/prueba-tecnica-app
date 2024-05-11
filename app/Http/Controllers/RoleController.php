@@ -52,7 +52,9 @@ class RoleController extends Controller
         ]);
         DB::beginTransaction();
         try {
-            Role::create(['name' => $request->input('name')])->syncPermissions($request->input('permission'));
+            $permission = Permission::whereIn('id', $request->input('permission'))->get();
+            Role::create(['name' => $request->input('name')])->syncPermissions($permission);
+            DB::commit();
             return redirect()->route('roles.index')->with('success', 'Role created successfully');
         } catch (\Exception $e) {
             DB::rollback();
@@ -103,7 +105,9 @@ class RoleController extends Controller
             $role = Role::find($id);
             $role->name = $request->input('name');
             $role->save();
-            $role->syncPermissions($request->input('permission'));
+            $permission = Permission::whereIn('id', $request->input('permission'))->get();
+            $role->syncPermissions($permission);
+            DB::commit();
             return redirect()->route('roles.index')->with('success', 'Role updated successfully');
         } catch (\Exception $e) {
             DB::rollback();
@@ -123,6 +127,7 @@ class RoleController extends Controller
         try {
             DB::table('roles')->where('id', $id)->delete();
             return redirect()->route('roles.index')->with('success', 'Role deleted successfully');
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('roles.index')->with('error', 'Role deleted failed');
